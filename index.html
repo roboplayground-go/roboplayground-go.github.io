@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoboPlayground GO!: Scaling Robot Learning Through Gamified Data Collection</title>
+  <meta name="description" content="RoboPlayground GO! turns robot data collection into a browser game. 309,119 bimanual demonstrations (3,489 hours) from 1,526 players across 69 tasks.">
+  <meta property="og:title" content="RoboPlayground GO!: Scaling Robot Learning Through Gamified Data Collection">
+  <meta property="og:description" content="Every successful play becomes a demo. 309,119 human demonstrations from 1,526 players, collected through a browser game.">
+  <meta property="og:image" content="./static/images/teaser.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/index.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================== CINEMATIC INTRO ============================== -->
+<section class="intro" id="intro" aria-label="Intro">
+  <canvas id="intro-canvas" aria-hidden="true"></canvas>
+  <img class="intro-fallback" src="./static/images/teaser.png" alt="">
+  <div class="letterbox top"></div><div class="letterbox bottom"></div>
+  <div class="intro-caps" aria-hidden="true">
+    <p class="cap" data-at="0.9" data-until="3.4"><b>1,526</b> players around the world</p>
+    <p class="cap" data-at="3.7" data-until="6.1">played a robot game <b>in their browser</b></p>
+    <p class="cap" data-at="6.4" data-until="8.8">and every successful play <b>became a demo.</b></p>
+  </div>
+  <div class="intro-title">
+    <p class="intro-kicker">The TeleArms dataset</p>
+    <h2>RoboPlayground <span class="go">GO!</span></h2>
+    <p class="intro-sub">Scaling robot learning through gamified data collection.</p>
+    <div class="intro-stats">
+      <div><b>309,119</b><span>demos</span></div>
+      <div><b>3,489</b><span>hours</span></div>
+      <div><b>69</b><span>tasks</span></div>
+    </div>
+  </div>
+  <button class="intro-skip" type="button">Skip intro</button>
+  <a class="intro-scroll" href="#top" aria-label="Scroll to details"><span></span>Scroll</a>
+</section>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="#top"><span class="cubes" aria-hidden="true"><i></i><i></i><i></i><i></i></span>RoboPlayground <span class="go">GO!</span></a>
+    <div class="nav-links">
+      <a href="#platform">Platform</a>
+      <a href="#dataset">Dataset</a>
+      <a href="#experiments">Experiments</a>
+      <a href="#gym">Gym</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+    <!-- TODO: link to the live game -->
+    <a class="nav-cta" href="#">Play now</a>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ============================== HERO ============================== -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="badge"><span class="dot"></span>Over 1,500 players and counting</span>
+    <h1 class="hero-title">RoboPlayground <span class="go">GO!</span></h1>
+    <p class="hero-sub">Scaling Robot Learning Through Gamified Data Collection</p>
+
+    <!-- TODO: replace with real authors / affiliations -->
+    <div class="authors">
+      <a href="#">Author One<sup>1</sup></a>
+      <a href="#">Author Two<sup>1</sup></a>
+      <a href="#">Author Three<sup>1,2</sup></a>
+    </div>
+    <p class="affil"><sup>1</sup>Affiliation One &nbsp;·&nbsp; <sup>2</sup>Affiliation Two</p>
+
+    <div class="cta-row">
+      <!-- TODO: fill in links -->
+      <a class="btn primary" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>Play the game</a>
+      <a class="btn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Paper</a>
+      <a class="btn" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>Dataset</a>
+      <a class="btn" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>Code &amp; Gym</a>
+      <a class="btn" href="#bibtex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 7H6a2 2 0 0 0-2 2v4h6V7zM20 7h-4a2 2 0 0 0-2 2v4h6V7z"/><path d="M4 13c0 3 1 4 3 5M14 13c0 3 1 4 3 5"/></svg>BibTeX</a>
+    </div>
+
+    <figure class="teaser reveal">
+      <img src="./static/images/teaser.png" alt="Players around the world play RoboPlayground GO! in the browser; every successful play becomes a demonstration in the TeleArms dataset, which trains robot policies that transfer to a real bimanual YAM robot." width="2040" height="1071">
+      <figcaption class="center"><strong>Every successful play becomes a demo.</strong> Players control a simulated bimanual YAM robot from a browser with a keyboard. Their successful attempts are verified, re-rendered and collected into the TeleArms dataset, which we use to train robot policies and test them on the real robot.</figcaption>
+    </figure>
+
+    <div class="stats reveal">
+      <div class="stat"><b data-count="309119">309,119</b><span>human demonstrations</span></div>
+      <div class="stat"><b data-count="3489">3,489</b><span>hours of demonstrations</span></div>
+      <div class="stat"><b data-count="1526">1,526</b><span>players contributed demos</span></div>
+      <div class="stat"><b data-count="69">69</b><span>bimanual manipulation tasks</span></div>
+      <div class="stat"><b>1.12M</b><span>trajectories after augmentation</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================== ABSTRACT ============================== -->
+<section class="section" id="abstract">
+  <div class="wrap narrow">
+    <p class="eyebrow">Abstract</p>
+    <h2 class="headline">Robot data is scarce. <span class="muted">Gamers are not.</span></h2>
+    <p class="lede">Collecting large and diverse robot manipulation data is still a major bottleneck for learning policies that generalize. Existing approaches usually need specialized hardware, trained operators and repetitive demonstrations, which limits who can contribute and how much data can be collected.</p>
+    <p class="lede" style="margin-top:1em">We introduce <strong>RoboPlayground GO!</strong>, a gamified platform where anyone can contribute robot learning data by playing simulated manipulation tasks. It builds on RoboPlayground's open-ended task generation framework and combines a growing library of manipulation challenges with keyboard teleoperation, Elo-based player ratings, progressive difficulty and gameplay incentives. Through the platform we collected <strong>309,119 demonstrations (3,489 hours) from 1,526 players across 69 tasks</strong>. We then study how to use this large, imperfect and varied data for policy learning, comparing data-selection strategies in and out of distribution and transferring policies from simulation to a real robot.</p>
+  </div>
+</section>
+
+<!-- ============================== PLATFORM ============================== -->
+<section class="section soft" id="platform">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">The platform</p>
+      <h2 class="headline">A robot lab that runs <span class="muted">in your browser.</span></h2>
+      <p class="lede">Players sign up, finish a short walkthrough and start with beginner missions. Harder tasks unlock as they go, and a dashboard shows their hours, mission history, Elo rating and leaderboard rank.</p>
+    </div>
+
+    <figure class="fig reveal">
+      <img src="./static/images/platform.png" alt="Four screens of the platform: discover missions, learn robot control, start beginner missions, and track progress on the leaderboard." width="1672" height="941">
+      <figcaption class="center">From first visit to leaderboard: (a) discover missions, (b) learn robot control, (c) start beginner missions, (d) track progress.</figcaption>
+    </figure>
+
+    <div class="grid-3" style="margin-top:24px">
+      <div class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+        <h3>Local play</h3>
+        <p>MuJoCo-WASM runs the simulation on the player's own machine. There is no streaming lag and no server queue, and every reported success is replayed and verified on our servers.</p>
+        <div class="num">78%<small>of the dataset</small></div>
+      </div>
+      <div class="card reveal">
+        <div class="icon o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
+        <h3>Elo ratings</h3>
+        <p>Players and tasks are rated against each other with Glicko-2. Higher-rated players succeed more often and finish faster, so the rating doubles as a data-quality signal.</p>
+        <div class="num">69.9 → 97.7%<small>success, low → high Elo</small></div>
+      </div>
+      <div class="card reveal">
+        <div class="icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 11h.01M10 11h.01M14 11h.01M18 11h.01M8 14h8"/></svg></div>
+        <h3>Keyboard first</h3>
+        <p>Each arm translates along three axes and rotates in yaw, pitch and roll. Keyboard, Xbox gamepad and Nintendo Joy-Con are all supported, but nearly everyone plays with a keyboard.</p>
+        <div class="num">99.8%<small>of attempts on keyboard</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== ENGAGEMENT ============================== -->
+<section class="section" id="engagement">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Engagement</p>
+      <h2 class="headline">People come back. <span class="muted">And they get better.</span></h2>
+      <p class="lede">After the public launch in early August, about <strong>250 people played on an average day</strong>. 51% of players return after their first day and 30% are still playing a month later. The top 10% of players contribute <strong>77% of all demonstrations</strong>.</p>
+    </div>
+    <figure class="fig reveal">
+      <img src="./static/images/engagement.png" alt="Four plots: daily players, cumulative players, retention after 1, 7 and 30 days, and the share of demos from the most active players." width="2070" height="621">
+      <figcaption class="center">(a) Daily players. (b) Cumulative players. (c) Retention after 1, 7 and 30 days. (d) Share of demos from the most active players.</figcaption>
+    </figure>
+
+    <div class="grid-2" style="margin-top:24px; align-items:start">
+      <figure class="fig reveal">
+        <img src="./static/images/elo_difficulty.png" alt="Bar charts of success rate and attempts per difficulty level, split by player Elo tercile." width="2070" height="732">
+        <figcaption>Tasks are assigned one of 10 difficulty levels. Success falls with difficulty in every Elo group, while high-Elo players keep succeeding on the hardest levels.</figcaption>
+      </figure>
+      <div class="reveal">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Player rating</th><th class="n">Attempts</th><th class="n">Success (%)</th><th class="n">Median time (s)</th></tr></thead>
+            <tbody>
+              <tr><td>≤ 1400</td><td class="n">62,663</td><td class="n">69.9</td><td class="n">110</td></tr>
+              <tr><td>1400–1450</td><td class="n">27,749</td><td class="n">90.4</td><td class="n">69</td></tr>
+              <tr><td>1450–1500</td><td class="n">35,416</td><td class="n">89.3</td><td class="n">59</td></tr>
+              <tr><td>1500–1560</td><td class="n">56,902</td><td class="n">95.8</td><td class="n">44</td></tr>
+              <tr><td>1560–1600</td><td class="n">26,429</td><td class="n">96.7</td><td class="n">40</td></tr>
+              <tr><td>1600–1700</td><td class="n">45,287</td><td class="n">97.7</td><td class="n">38</td></tr>
+              <tr><td>&gt; 1700</td><td class="n">11,412</td><td class="n">96.7</td><td class="n">60</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Player rating vs. task performance. Players who completed 15–20 games and later 200–220 games rose from a mean Elo of 1357 to 1459.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== DATASET ============================== -->
+<section class="section soft" id="dataset">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">The TeleArms dataset</p>
+      <h2 class="headline">From gameplay <span class="muted">to training data.</span></h2>
+      <p class="lede">Each successful attempt is replayed in simulation at 30&nbsp;Hz, trimmed and checked again. It is then rendered three times with increasing domain randomization, and synthetic colour and letter variants are added. The result is a <strong>30&nbsp;Hz LeRobot dataset with 1.12M trajectories and 1.35 billion frames</strong>.</p>
+    </div>
+
+    <figure class="fig reveal">
+      <img src="./static/images/pipeline.png" alt="Data pipeline: cleaning removes too-short, failed, jumpy and malformed recordings; three renders per demo add realistic, viewpoint and appearance randomization; the final dataset has one top and two wrist cameras." width="2070" height="810">
+      <figcaption class="center">Data pipeline from game recordings to the training set.</figcaption>
+    </figure>
+
+    <div class="grid-2" style="margin-top:24px">
+      <figure class="fig reveal">
+        <img src="./static/images/randomization.png" alt="The same frame rendered under realistic, viewpoint and appearance randomization." width="1620" height="1005">
+        <figcaption>The same frame under three levels of domain randomization: table material and lighting, camera pose, and object colour.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="./static/images/synthetic.png" alt="An original demonstration and two synthetic variants with remapped cube colours and patch colours." width="2022" height="924">
+        <figcaption>Synthetic variants through semantic relabeling. The robot actions stay the same, while cube colours, patch colours and letters are remapped and the instruction is rewritten to match.</figcaption>
+      </figure>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <figure class="fig reveal">
+        <img src="./static/images/growth.png" alt="Cumulative dataset demos over time, split into cloud and local play; local play dominates after September." width="960" height="576">
+        <figcaption><strong>Latency matters.</strong> After local play launched in early September, collection sped up sharply while cloud play levelled off.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="./static/images/taxonomy.png" alt="Number of tasks per taxonomy category across manipulation, perception, reasoning and horizon." width="2070" height="645">
+        <figcaption>Each of the 69 tasks is labeled for manipulation, perception, reasoning and horizon. Bars show the number of tasks and the share of demos.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== COMPARISON ============================== -->
+<section class="section" id="comparison">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Comparison</p>
+      <h2 class="headline">The largest non-expert <span class="muted">bimanual dataset in simulation.</span></h2>
+      <p class="lede">Most large manipulation datasets come from experts in a lab. RoboPlayground GO! collects data from anyone with a browser and a keyboard.</p>
+    </div>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Dataset</th><th>Data</th><th>Robot</th><th>Interface</th><th class="n">People</th><th class="n">Episodes</th><th class="n">Hours</th><th class="n">Tasks</th><th>Failures</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="9">Crowdsourced or non-expert collection</td></tr>
+          <tr><td>RoboTurk</td><td>Sim</td><td>Sawyer</td><td>Smartphone</td><td class="n">—</td><td class="n">2.2k</td><td class="n">137.5</td><td class="n">2</td><td>—</td></tr>
+          <tr><td>RoboTurk Real</td><td>Real</td><td>Sawyer</td><td>Smartphone</td><td class="n">54</td><td class="n">2.144k</td><td class="n">111</td><td class="n">3</td><td>—</td></tr>
+          <tr><td>RoboCrowd</td><td>Real</td><td>ALOHA (bimanual)</td><td>Puppeteering</td><td class="n">231</td><td class="n">0.817k</td><td class="n">—</td><td class="n">6</td><td>Quality labels</td></tr>
+          <tr><td>RoboCade</td><td>Real</td><td>Franka FR3</td><td>Web + GELLO</td><td class="n">—</td><td class="n">0.910k</td><td class="n">—</td><td class="n">6</td><td>—</td></tr>
+          <tr><td>AXIS V2</td><td>Sim</td><td>Franka FR3</td><td>Browser</td><td class="n">—</td><td class="n">2,350k<sup>†</sup></td><td class="n">—</td><td class="n">1,092</td><td>—</td></tr>
+          <tr class="group"><td colspan="9">Expert or lab collection</td></tr>
+          <tr><td>robomimic MH</td><td>Sim</td><td>Panda (1–2 arms)</td><td>Smartphone</td><td class="n">6</td><td class="n">1.2k</td><td class="n">—</td><td class="n">4</td><td>✗</td></tr>
+          <tr><td>DROID</td><td>Real</td><td>Franka Panda</td><td>VR</td><td class="n">50</td><td class="n">76k</td><td class="n">350</td><td class="n">86</td><td>✓ (16k)</td></tr>
+          <tr><td>RoboMIND</td><td>Real</td><td>4 embodiments</td><td>Teleop</td><td class="n">—</td><td class="n">107k</td><td class="n">305.5</td><td class="n">479</td><td>✓ (5k)</td></tr>
+          <tr><td>AgiBot World</td><td>Real</td><td>Dual-arm humanoid</td><td>Teleop</td><td class="n">—</td><td class="n">1,000k</td><td class="n">2,976</td><td class="n">217</td><td>✓</td></tr>
+          <tr><td>RoboCasa365</td><td>Sim</td><td>Mobile Panda</td><td>Teleop</td><td class="n">—</td><td class="n">55k (+600k)</td><td class="n">612 (+1,615)</td><td class="n">365</td><td>—</td></tr>
+          <tr class="ours"><td>RoboPlayground GO! (ours)</td><td>Sim</td><td>YAM (bimanual)</td><td>Browser game</td><td class="n">1,526</td><td class="n">309,119 (+815,781)</td><td class="n">3,489 (+9,044)</td><td class="n">69</td><td>Stored</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Numbers in parentheses are generated or augmented data. † Includes camera-augmented episodes, not only independent human demonstrations.</p>
+  </div>
+</section>
+
+<!-- ============================== DIVERSITY ============================== -->
+<section class="section soft" id="diversity">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Behavioural diversity</p>
+      <h2 class="headline">Same task, <span class="muted">many ways to solve it.</span></h2>
+      <p class="lede">We measure trajectory diversity with signature entropy. Across the 69 tasks it ranges from 0.94 to 3.06, which corresponds to about <strong>3 to 21 distinct strategies per 150 demonstrations</strong>. Players also disagree on which cube to move first, unless the task fixes the order.</p>
+    </div>
+    <div class="grid-2" style="align-items:start">
+      <figure class="fig reveal">
+        <img src="./static/images/diversity.png" alt="Trajectory plots for the most and least diverse tasks, and signature entropy for all 69 tasks." width="1719" height="945">
+        <figcaption>Trajectory diversity per task. Green Patch Corner Guarding is the most diverse task and Cube Forward Right Placement the least.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="./static/images/first_cube.png" alt="Stacked bars showing which cube players moved first in the 15 two-cube tasks." width="990" height="627">
+        <figcaption>Which cube players moved first in the 15 two-cube tasks. Behaviour converges only when the task has order constraints.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== EXPERIMENTS ============================== -->
+<section class="section" id="experiments">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Experiments</p>
+      <h2 class="headline">More data helps. <span class="muted">Better data helps more.</span></h2>
+      <p class="lede">We fine-tune π<sub>0.5</sub> on 10 tasks with different amounts and selections of gameplay data, and evaluate in simulation with 50 episodes per task. Besides success, we report a <strong>Demo Score</strong> that rates each rollout against human demonstrations on completion, efficiency, smoothness and safety.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card reveal" id="scaling-card">
+        <div class="chart-top">
+          <h3>Scaling with demos per task</h3>
+          <div class="seg" role="tablist">
+            <button class="on" data-metric="succ">Success</button>
+            <button data-metric="score">Demo Score</button>
+          </div>
+        </div>
+        <div class="scale-chart" id="scale-chart"></div>
+        <div class="legend" style="margin-top:12px"><span><i style="background:var(--blue)"></i>10 tasks</span><span><i style="background:var(--orange)"></i>4 harder tasks</span></div>
+        <p class="chart-note">Success rises from 73.6% at 50 demos per task to 90.0% at 500, then levels off. The four harder tasks gain the most, from 48.0% to 78.5%.</p>
+      </div>
+
+      <div class="chart-card reveal" id="select-card">
+        <div class="chart-top">
+          <h3>Data selection at 1,500 demos per task</h3>
+          <div class="seg" role="tablist">
+            <button class="on" data-metric="succ">Success</button>
+            <button data-metric="hard">4 harder</button>
+            <button data-metric="score">Demo Score</button>
+          </div>
+        </div>
+        <div class="bars" id="select-bars"></div>
+        <p class="chart-note">Selecting by Demo Score gives the best results: 95.2% success vs. 90.2% for random selection, and 93.0% vs. 76.5% on the four harder tasks.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px; align-items:start">
+      <figure class="fig reveal">
+        <img src="./static/images/ood_axes.png" alt="Examples of the out-of-distribution axes View, Pose, Swap and Color on two tasks." width="951" height="1560" style="max-height:640px; width:auto">
+        <figcaption>Out-of-distribution evaluation. Each axis changes one thing: camera view, instruction wording, cube friction, start pose, target swap or a new colour/letter.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="./static/images/full_model.png" alt="Per-task success rate of the full-dataset π0.5 model on all 69 tasks; mean 57.2%." width="1002" height="1221" style="max-height:640px; width:auto">
+        <figcaption><strong>One model, 69 tasks.</strong> π<sub>0.5</sub> fine-tuned on the full dataset succeeds in 57.2% of episodes. 17 tasks always succeed. Most of the 15 that never do involve arranging letters, digits or words.</figcaption>
+      </figure>
+    </div>
+
+    <div class="reveal" style="margin-top:56px">
+      <h3 class="sub-h">Can a frontier model play zero-shot?</h3>
+      <p style="color:var(--ink-2); max-width:780px">We ran GPT-6 Astra as a zero-shot policy and compared it with π<sub>0.5</sub> fine-tuned on our data, using 4 tasks and 10 episodes each. Astra solves the easy tasks but nearly fails the ones that require picking up and turning a cube. It is also 10–23× slower and costs $173.64 for 40 episodes.</p>
+      <div class="table-wrap" style="margin-top:20px">
+        <table>
+          <thead><tr><th>Task</th><th class="n">Astra success</th><th class="n">π<sub>0.5</sub> success</th><th class="n">Astra time (s)</th><th class="n">π<sub>0.5</sub> time (s)</th><th class="n">Cost (USD)</th></tr></thead>
+          <tbody>
+            <tr><td>Red Left Of Blue Placement</td><td class="n">10/10</td><td class="n">10/10</td><td class="n">99</td><td class="n">9</td><td class="n">5.64</td></tr>
+            <tr><td>Cube Patch Placement</td><td class="n">10/10</td><td class="n">10/10</td><td class="n">263</td><td class="n">17</td><td class="n">11.54</td></tr>
+            <tr><td>Semantic Cube On Red Patch A Up</td><td class="n">1/10</td><td class="n">5/10</td><td class="n">308</td><td class="n">31</td><td class="n">81.76</td></tr>
+            <tr><td>Letter Face Alignment</td><td class="n">1/10</td><td class="n">7/10</td><td class="n">829</td><td class="n">36</td><td class="n">74.70</td></tr>
+            <tr class="ours"><td>Total</td><td class="n">22/40</td><td class="n">32/40</td><td class="n">—</td><td class="n">—</td><td class="n">173.64</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== GYM ============================== -->
+<section class="section soft" id="gym">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Open resources</p>
+      <h2 class="headline">TeleArms-Gym <span class="muted">and offline RL datasets.</span></h2>
+      <p class="lede">We release a Gymnasium environment with 100 real and synthetic tasks for post-training and RL research. It offers image or privileged-state observations, sparse or dense subtask rewards, and the same three visual augmentations as the dataset.</p>
+    </div>
+    <div class="grid-2" style="align-items:center">
+      <figure class="fig reveal">
+        <img src="./static/images/gym.png" alt="Two renders of the TeleArms-Gym environment with the bimanual YAM robot on different tables." width="1774" height="887">
+        <figcaption>TeleArms-Gym environment.</figcaption>
+      </figure>
+      <div class="reveal">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th class="n">Tasks</th><th>Observation</th><th class="n">Episodes</th><th class="n">Steps</th><th class="n">Size (GB)</th></tr></thead>
+            <tbody>
+              <tr><td class="n">10</td><td>image</td><td class="n">36.4K</td><td class="n">28.1M</td><td class="n">58.7</td></tr>
+              <tr><td class="n">10</td><td>state</td><td class="n">36.4K</td><td class="n">28.1M</td><td class="n">10.0</td></tr>
+              <tr><td class="n">100</td><td>image</td><td class="n">323.5K</td><td class="n">386.5M</td><td class="n">820.3</td></tr>
+              <tr><td class="n">100</td><td>state</td><td class="n">323.5K</td><td class="n">386.5M</td><td class="n">122.9</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Image datasets use LeRobot format with three 224×224 cameras plus proprioception. State datasets use Minari format and can be reloaded directly into the Gym. Actions are 14-dim absolute joint targets at 30&nbsp;Hz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== BIBTEX ============================== -->
+<section class="section" id="bibtex">
+  <div class="wrap narrow">
+    <p class="eyebrow">Citation</p>
+    <h2 class="headline" style="font-size:clamp(28px,3.4vw,40px)">BibTeX</h2>
+    <!-- TODO: update authors / venue -->
+<pre class="bib"><button class="copy" type="button">Copy</button><code id="bib-code">@article{roboplaygroundgo2026,
+  title   = {RoboPlayground GO!: Scaling Robot Learning Through Gamified Data Collection},
+  author  = {Author One and Author Two and Author Three},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</code></pre>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>RoboPlayground GO! · Builds on <a href="https://roboplayground.github.io/">RoboPlayground</a></span>
+    <span>Page content licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure"><img alt=""></div>
+<script src="./static/js/main.js"></script>
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }</script>
+<script type="module" src="./static/js/intro.js"></script>
+</body>
+</html>
