@@ -66,12 +66,7 @@
     <p class="hero-sub">Scaling Robot Learning Through Gamified Data Collection</p>
 
     <!-- TODO: replace with real authors / affiliations -->
-    <div class="authors">
-      <a href="#">Author One<sup>1</sup></a>
-      <a href="#">Author Two<sup>1</sup></a>
-      <a href="#">Author Three<sup>1,2</sup></a>
-    </div>
-    <p class="affil"><sup>1</sup>Affiliation One &nbsp;·&nbsp; <sup>2</sup>Affiliation Two</p>
+    <div class="authors"><span>Anonymous Submission</span></div>
 
     <div class="cta-row">
       <!-- TODO: fill in links -->
@@ -104,6 +99,18 @@
     <h2 class="headline">Robot data is scarce. <span class="muted">Gamers are not.</span></h2>
     <p class="lede">Collecting large and diverse robot manipulation data is still a major bottleneck for learning policies that generalize. Existing approaches usually need specialized hardware, trained operators and repetitive demonstrations, which limits who can contribute and how much data can be collected.</p>
     <p class="lede" style="margin-top:1em">We introduce <strong>RoboPlayground GO!</strong>, a gamified platform where anyone can contribute robot learning data by playing simulated manipulation tasks. It builds on RoboPlayground's open-ended task generation framework and combines a growing library of manipulation challenges with keyboard teleoperation, Elo-based player ratings, progressive difficulty and gameplay incentives. Through the platform we collected <strong>309,119 demonstrations (3,489 hours) from 1,526 players across 69 tasks</strong>. We then study how to use this large, imperfect and varied data for policy learning, comparing data-selection strategies in and out of distribution and transferring policies from simulation to a real robot.</p>
+  </div>
+</section>
+
+<!-- ============================== GAMEPLAY WALL ============================== -->
+<section class="section dark" id="gameplay">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Straight from the dataset</p>
+      <h2 class="headline">Real players. <span class="muted">Real demos.</span></h2>
+      <p class="lede">Every clip below is a real human demonstration from the TeleArms dataset, replayed in simulation and played back at 1.5–2× speed. Hover over a clip to read its instruction.</p>
+    </div>
+    <div class="wall" id="wall"></div>
   </div>
 </section>
 
@@ -162,22 +169,13 @@
         <img src="./static/images/elo_difficulty.png" alt="Bar charts of success rate and attempts per difficulty level, split by player Elo tercile." width="2070" height="732">
         <figcaption>Tasks are assigned one of 10 difficulty levels. Success falls with difficulty in every Elo group, while high-Elo players keep succeeding on the hardest levels.</figcaption>
       </figure>
-      <div class="reveal">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Player rating</th><th class="n">Attempts</th><th class="n">Success (%)</th><th class="n">Median time (s)</th></tr></thead>
-            <tbody>
-              <tr><td>≤ 1400</td><td class="n">62,663</td><td class="n">69.9</td><td class="n">110</td></tr>
-              <tr><td>1400–1450</td><td class="n">27,749</td><td class="n">90.4</td><td class="n">69</td></tr>
-              <tr><td>1450–1500</td><td class="n">35,416</td><td class="n">89.3</td><td class="n">59</td></tr>
-              <tr><td>1500–1560</td><td class="n">56,902</td><td class="n">95.8</td><td class="n">44</td></tr>
-              <tr><td>1560–1600</td><td class="n">26,429</td><td class="n">96.7</td><td class="n">40</td></tr>
-              <tr><td>1600–1700</td><td class="n">45,287</td><td class="n">97.7</td><td class="n">38</td></tr>
-              <tr><td>&gt; 1700</td><td class="n">11,412</td><td class="n">96.7</td><td class="n">60</td></tr>
-            </tbody>
-          </table>
+      <div class="chart-card reveal">
+        <div class="chart-top">
+          <h3>Elo predicts skill</h3>
+          <div class="legend"><span><i style="background:var(--blue);height:10px;width:10px"></i>Success rate</span><span><i style="background:var(--orange)"></i>Median time</span></div>
         </div>
-        <p class="table-note">Player rating vs. task performance. Players who completed 15–20 games and later 200–220 games rose from a mean Elo of 1357 to 1459.</p>
+        <div class="elo-chart" id="elo-chart"></div>
+        <p class="chart-note">Hover over a rating band to see its numbers. Players who completed 15–20 games and later 200–220 games rose from a mean Elo of 1357 to 1459.</p>
       </div>
     </div>
   </div>
@@ -192,20 +190,54 @@
       <p class="lede">Each successful attempt is replayed in simulation at 30&nbsp;Hz, trimmed and checked again. It is then rendered three times with increasing domain randomization, and synthetic colour and letter variants are added. The result is a <strong>30&nbsp;Hz LeRobot dataset with 1.12M trajectories and 1.35 billion frames</strong>.</p>
     </div>
 
-    <figure class="fig reveal">
-      <img src="./static/images/pipeline.png" alt="Data pipeline: cleaning removes too-short, failed, jumpy and malformed recordings; three renders per demo add realistic, viewpoint and appearance randomization; the final dataset has one top and two wrist cameras." width="2070" height="810">
-      <figcaption class="center">Data pipeline from game recordings to the training set.</figcaption>
-    </figure>
+    <div class="chart-card reveal" id="funnel-card">
+      <div class="chart-top">
+        <h3>From game attempts to training trajectories</h3>
+        <span class="chart-hint">Hover over a flow for details</span>
+      </div>
+      <div class="sankey-scroll"><div id="sankey"></div></div>
+      <div class="tip" id="sankey-tip"></div>
+    </div>
 
-    <div class="grid-2" style="margin-top:24px">
-      <figure class="fig reveal">
-        <img src="./static/images/randomization.png" alt="The same frame rendered under realistic, viewpoint and appearance randomization." width="1620" height="1005">
-        <figcaption>The same frame under three levels of domain randomization: table material and lighting, camera pose, and object colour.</figcaption>
-      </figure>
-      <figure class="fig reveal">
-        <img src="./static/images/synthetic.png" alt="An original demonstration and two synthetic variants with remapped cube colours and patch colours." width="2022" height="924">
-        <figcaption>Synthetic variants through semantic relabeling. The robot actions stay the same, while cube colours, patch colours and letters are remapped and the instruction is rewritten to match.</figcaption>
-      </figure>
+    <div class="chart-card reveal explorer" id="render-card" style="margin-top:24px">
+      <div class="chart-top">
+        <h3>One demo, three renders</h3>
+        <div class="seg" data-key="task">
+          <button class="on" data-v="pyramid">Pyramid</button>
+          <button data-v="logo">Logo</button>
+          <button data-v="bridge">Bridge</button>
+        </div>
+      </div>
+      <div class="render-grid">
+        <div class="vbox main"><video muted playsinline loop preload="auto" data-cam="front"></video><span class="vlabel">top camera</span></div>
+        <div class="vbox"><video muted playsinline loop preload="auto" data-cam="left"></video><span class="vlabel">left wrist</span></div>
+        <div class="vbox"><video muted playsinline loop preload="auto" data-cam="right"></video><span class="vlabel">right wrist</span></div>
+      </div>
+      <div class="render-ctl">
+        <div class="seg seg-lg" data-key="render">
+          <button class="on" data-v="d1">Realistic<small>table &amp; lighting</small></button>
+          <button data-v="d2">Viewpoint<small>+ camera pose</small></button>
+          <button data-v="d3">Appearance<small>+ object colour</small></button>
+        </div>
+        <p class="instr" id="render-instr"></p>
+      </div>
+      <p class="chart-note">Every human demonstration is replayed and rendered three times with more and more randomization, so policies learn from the same motion in different-looking scenes. The three views stay in sync when you switch render.</p>
+    </div>
+
+    <div class="chart-card reveal explorer" id="synth-card" style="margin-top:24px">
+      <div class="chart-top">
+        <h3>Synthetic variants: same motion, new task</h3>
+        <div class="seg" data-key="ex">
+          <button class="on" data-v="0">Colour line</button>
+          <button data-v="1">Letter stack</button>
+          <button data-v="2">Patches</button>
+        </div>
+      </div>
+      <div class="grid-2 synth-grid">
+        <div><div class="vbox"><video muted playsinline loop preload="auto"></video><span class="vlabel">original human demo</span></div><p class="instr"></p></div>
+        <div><div class="vbox"><video muted playsinline loop preload="auto"></video><span class="vlabel accent">synthetic variant</span></div><p class="instr"></p></div>
+      </div>
+      <p class="chart-note">The robot actions stay identical. Only the cube colours, patch colours or letters are remapped, and the instruction is rewritten to match (changed words are highlighted). This adds 197,543 trajectories with no extra human play.</p>
     </div>
 
     <div class="grid-2" style="margin-top:24px">
@@ -229,7 +261,23 @@
       <h2 class="headline">The largest non-expert <span class="muted">bimanual dataset in simulation.</span></h2>
       <p class="lede">Most large manipulation datasets come from experts in a lab. RoboPlayground GO! collects data from anyone with a browser and a keyboard.</p>
     </div>
-    <div class="table-wrap reveal">
+    <div class="chart-card reveal" id="cmp-card">
+      <div class="chart-top">
+        <h3>Scale compared with other manipulation datasets</h3>
+        <div class="seg">
+          <button class="on" data-metric="episodes">Episodes</button>
+          <button data-metric="hours">Hours</button>
+          <button data-metric="people">Contributors</button>
+          <button data-metric="tasks">Tasks</button>
+        </div>
+      </div>
+      <div id="cmp-bars" class="cmp-bars"></div>
+      <div class="legend" style="margin-top:18px; flex-wrap:wrap"><span><i style="background:var(--blue)"></i>Ours</span><span><i style="background:#9DB4E0"></i>Crowdsourced / non-expert</span><span><i style="background:#C5CAD3"></i>Expert / lab</span><span><i class="hatch"></i>Generated or augmented</span></div>
+      <p class="chart-note">Log scale. Datasets that don't report a number are left out of that view.</p>
+    </div>
+    <details class="table-details reveal">
+      <summary>Show the full comparison table</summary>
+    <div class="table-wrap">
       <table>
         <thead><tr><th>Dataset</th><th>Data</th><th>Robot</th><th>Interface</th><th class="n">People</th><th class="n">Episodes</th><th class="n">Hours</th><th class="n">Tasks</th><th>Failures</th></tr></thead>
         <tbody>
@@ -250,6 +298,7 @@
       </table>
     </div>
     <p class="table-note">Numbers in parentheses are generated or augmented data. † Includes camera-augmented episodes, not only independent human demonstrations.</p>
+    </details>
   </div>
 </section>
 
@@ -312,10 +361,29 @@
     </div>
 
     <div class="grid-2" style="margin-top:24px; align-items:start">
-      <figure class="fig reveal">
-        <img src="./static/images/ood_axes.png" alt="Examples of the out-of-distribution axes View, Pose, Swap and Color on two tasks." width="951" height="1560" style="max-height:640px; width:auto">
-        <figcaption>Out-of-distribution evaluation. Each axis changes one thing: camera view, instruction wording, cube friction, start pose, target swap or a new colour/letter.</figcaption>
-      </figure>
+      <div class="chart-card reveal explorer" id="ood-card">
+        <div class="chart-top">
+          <h3>Out-of-distribution axes</h3>
+          <div class="seg" data-key="task">
+            <button class="on" data-v="rb">Red in front of blue</button>
+            <button data-v="patch">Cube patch</button>
+          </div>
+        </div>
+        <div class="ood-view">
+          <img id="ood-base" alt="">
+          <img id="ood-pert" alt="">
+          <input type="range" id="ood-slider" min="0" max="100" value="50" aria-label="Compare in-distribution and perturbed">
+          <span class="vlabel">in distribution</span><span class="vlabel right accent" id="ood-axis-label">View</span>
+        </div>
+        <div class="seg ood-axes" data-key="axis">
+          <button class="on" data-v="view">View</button>
+          <button data-v="pose">Pose</button>
+          <button data-v="swap">Swap</button>
+          <button data-v="color">Color</button>
+        </div>
+        <p class="instr" id="ood-desc"></p>
+        <p class="chart-note">Drag the slider to compare a training-distribution scene with its perturbed version. Each axis changes exactly one thing. Two more axes change no pixels: Lang paraphrases the instruction and Physics lowers cube friction to 0.3×.</p>
+      </div>
       <figure class="fig reveal">
         <img src="./static/images/full_model.png" alt="Per-task success rate of the full-dataset π0.5 model on all 69 tasks; mean 57.2%." width="1002" height="1221" style="max-height:640px; width:auto">
         <figcaption><strong>One model, 69 tasks.</strong> π<sub>0.5</sub> fine-tuned on the full dataset succeeds in 57.2% of episodes. 17 tasks always succeed. Most of the 15 that never do involve arranging letters, digits or words.</figcaption>
@@ -380,7 +448,7 @@
     <!-- TODO: update authors / venue -->
 <pre class="bib"><button class="copy" type="button">Copy</button><code id="bib-code">@article{roboplaygroundgo2026,
   title   = {RoboPlayground GO!: Scaling Robot Learning Through Gamified Data Collection},
-  author  = {Author One and Author Two and Author Three},
+  author  = {Anonymous},
   journal = {arXiv preprint},
   year    = {2026}
 }</code></pre>
@@ -398,6 +466,7 @@
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure"><img alt=""></div>
 <script src="./static/js/main.js"></script>
+<script src="./static/js/interactive.js"></script>
 <script type="importmap">{ "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
