@@ -14,16 +14,17 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: devicePixelRatio < 1.5, powerPreference: 'high-performance' });
 } catch (e) {
   root.classList.add('no-webgl', 'done');
   throw e;
 }
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+let dpr = Math.min(devicePixelRatio, 1.5);
+renderer.setPixelRatio(dpr);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.9;
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05070d);
@@ -38,9 +39,8 @@ scene.add(new THREE.HemisphereLight(0x9bb8ff, 0x0a0c14, 0.6));
 const key = new THREE.DirectionalLight(0xffffff, 2.0);
 key.position.set(10, 18, 8);
 key.castShadow = true;
-key.shadow.mapSize.set(2048, 2048);
+key.shadow.mapSize.set(1024, 1024);
 Object.assign(key.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 60 });
-key.shadow.radius = 6;
 scene.add(key);
 const rim = new THREE.PointLight(0x3b7bf6, 60, 40, 1.6); rim.position.set(-9, 4, -8); scene.add(rim);
 const rim2 = new THREE.PointLight(0xe9682c, 40, 40, 1.6); rim2.position.set(10, 6, -10); scene.add(rim2);
@@ -58,7 +58,7 @@ scene.add(floor);
 // dotted globe ring on the floor (players around the world)
 {
   const pts = [];
-  for (let i = 0; i < 2600; i++) {
+  for (let i = 0; i < 1200; i++) {
     const r = 9 + Math.sqrt(Math.random()) * 26, a = Math.random() * Math.PI * 2;
     pts.push(Math.cos(a) * r, floorY + 0.02, Math.sin(a) * r);
   }
@@ -68,8 +68,8 @@ scene.add(floor);
 
 // ---------- cubes ----------
 const PALETTE = [0x2463eb, 0x2463eb, 0xe9682c, 0x22a06b, 0xf2b705, 0xe5484d, 0x6e56cf];
-const geo = new RoundedBoxGeometry(0.94, 0.94, 0.94, 3, 0.12);
-const mat = new THREE.MeshPhysicalMaterial({ roughness: 0.35, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.55 });
+const geo = new RoundedBoxGeometry(0.94, 0.94, 0.94, 2, 0.12);
+const mat = new THREE.MeshStandardMaterial({ roughness: 0.3, metalness: 0, envMapIntensity: 0.6 });
 const COUNT = N * N * N;
 const mesh = new THREE.InstancedMesh(geo, mat, COUNT);
 mesh.castShadow = true; mesh.receiveShadow = true;
@@ -86,14 +86,14 @@ for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) for (let z = 0; z < N; z
   start.push(dir.multiplyScalar(45 + Math.random() * 35));
   startQ.push(new THREE.Quaternion().random());
   // bottom layers first, so the cube is "stacked" up
-  delay.push(0.1 + (y / N) * 3.0 + Math.random() * 1.1);
-  flight.push(1.3 + Math.random() * 0.6);
+  delay.push(0.1 + (y / N) * 1.6 + Math.random() * 0.6);
+  flight.push(0.9 + Math.random() * 0.4);
   mesh.setColorAt(i, col.set(PALETTE[(Math.random() * PALETTE.length) | 0]));
 }
 mesh.instanceColor.needsUpdate = true;
 
 // ---------- data stream particles ----------
-const P = 1400;
+const P = 600;
 const pGeo = new THREE.BufferGeometry();
 const pPos = new Float32Array(P * 3), pCol = new Float32Array(P * 3);
 const pFrom = [], pTo = [], pPhase = [], pSpeed = [], pBase = [];
@@ -120,7 +120,7 @@ composer.addPass(new OutputPass());
 
 function resize() {
   const w = root.clientWidth, h = root.clientHeight;
-  renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w, h);
+  renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w / 2, h / 2);
   camera.aspect = w / h;
   camera.fov = w / h < 0.8 ? 46 : 32; // phones need a wider lens
   camera.updateProjectionMatrix();
@@ -131,11 +131,12 @@ addEventListener('resize', resize); resize();
 const ease3 = (t) => 1 - Math.pow(1 - t, 3);
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const clamp01 = (t) => Math.min(1, Math.max(0, t));
-const m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), one = new THREE.Vector3(1, 1, 1);
+const m4 = new THREE.Matrix4(), v = new THREE.Vector3(), q = new THREE.Quaternion(), tq = new THREE.Quaternion(), one = new THREE.Vector3(1, 1, 1);
+const right = new THREE.Vector3(), target = new THREE.Vector3();
 const AX = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
 const KEYS = ['x', 'y', 'z'];
 
-let twist = null, nextTwist = 6.4;
+let twist = null, nextTwist = 3.6;
 function startTwist(t) {
   const a = (Math.random() * 3) | 0;
   twist = { a, layer: ((Math.random() * N) | 0) - HALF, dir: Math.random() < 0.5 ? -1 : 1, t0: t, dur: 0.75 };
@@ -152,7 +153,7 @@ function commitTwist() {
 
 // ---------- captions timeline ----------
 const caps = [...root.querySelectorAll('[data-at]')];
-const T_TITLE = 9.2;
+const T_TITLE = 5;
 const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
 addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; });
 
@@ -160,13 +161,24 @@ let visible = true;
 new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(root);
 
 const clock = new THREE.Clock();
+let slow = 0, tier = 0;
+function degrade() {
+  tier++;
+  if (tier === 1) bloom.enabled = false;
+  else if (tier === 2) { renderer.shadowMap.enabled = false; key.castShadow = false; mat.needsUpdate = true; floor.material.needsUpdate = true; }
+  else if (dpr > 0.75) { dpr = Math.max(0.75, dpr - 0.25); renderer.setPixelRatio(dpr); resize(); }
+}
 let t = reduced ? 30 : 0;
 root.querySelector('.intro-skip').addEventListener('click', () => { t = Math.max(t, T_TITLE); });
 
 function frame() {
   requestAnimationFrame(frame);
   if (!visible) { clock.getDelta(); return; }
-  t += Math.min(clock.getDelta(), 0.05);
+  const dt = clock.getDelta();
+  t += Math.min(dt, 0.1);
+  // adaptive quality: if most recent frames are slower than 40 fps, step down
+  slow = slow * 0.95 + (dt > 1 / 40 && dt < 0.5 ? 0.05 : 0);
+  if (slow > 0.6) { degrade(); slow = 0; }
 
   // captions + title
   caps.forEach((c) => {
@@ -176,14 +188,12 @@ function frame() {
   root.classList.toggle('done', t >= T_TITLE);
 
   // cubes
+  const tw = twist && tq.setFromAxisAngle(AX[twist.a], twist.dir * Math.PI / 2 * easeIO(clamp01((t - twist.t0) / twist.dur)));
   for (let k = 0; k < COUNT; k++) {
     const p = clamp01((t - delay[k]) / flight[k]);
     v.copy(grid[k]).multiplyScalar(S);
     q.copy(quat[k]);
-    if (twist && Math.round(grid[k][KEYS[twist.a]]) === twist.layer) {
-      const r = new THREE.Quaternion().setFromAxisAngle(AX[twist.a], twist.dir * Math.PI / 2 * easeIO(clamp01((t - twist.t0) / twist.dur)));
-      v.applyQuaternion(r); q.premultiply(r);
-    }
+    if (tw && Math.round(grid[k][KEYS[twist.a]]) === twist.layer) { v.applyQuaternion(tw); q.premultiply(tw); }
     if (p < 1) {
       const e = ease3(p);
       const arc = Math.sin(p * Math.PI) * 6;
@@ -199,7 +209,7 @@ function frame() {
   if (!twist && t >= nextTwist) { startTwist(t); nextTwist = t + 1.25 + Math.random() * 0.6; }
 
   // data stream: on during assembly, then a gentle trickle forever
-  const intensity = Math.min(1, t * 2) * (t < 6 ? 1 : 0.35);
+  const intensity = Math.min(1, t * 2) * (t < 3.5 ? 1 : 0.35);
   for (let k = 0; k < P; k++) {
     const f = (pPhase[k] + t * pSpeed[k]) % 1;
     const e = f * f;
@@ -213,14 +223,15 @@ function frame() {
 
   // camera: slow dolly-in and orbit, then ease off to the right so the title has room
   mouse.sx += (mouse.x - mouse.sx) * 0.04; mouse.sy += (mouse.y - mouse.sy) * 0.04;
-  const intro = easeIO(clamp01(t / 9));
+  const intro = easeIO(clamp01(t / 5));
   const dist = (50 - 20 * intro) * Math.max(1, 1.25 / camera.aspect);
   const ang = -0.9 + t * 0.06 + mouse.sx * 0.35;
   const h = 14 - 8.5 * intro - mouse.sy * 3;
   camera.position.set(Math.sin(ang) * dist, h, Math.cos(ang) * dist);
   const shift = easeIO(clamp01((t - T_TITLE + 0.6) / 1.6)) * (camera.aspect > 1.1 ? -6.8 : 0);
-  const right = new THREE.Vector3(Math.cos(ang), 0, -Math.sin(ang));
-  camera.lookAt(right.multiplyScalar(shift).add(new THREE.Vector3(0, camera.aspect > 1.1 ? 0 : -2.5 * easeIO(clamp01(t - T_TITLE)), 0)));
+  right.set(Math.cos(ang), 0, -Math.sin(ang));
+  target.set(0, camera.aspect > 1.1 ? 0 : -2.5 * easeIO(clamp01(t - T_TITLE)), 0).addScaledVector(right, shift);
+  camera.lookAt(target);
   mesh.rotation.y = t * 0.04;
 
   composer.render();

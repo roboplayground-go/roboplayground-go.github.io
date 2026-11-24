@@ -14,6 +14,11 @@
     if (e.isIntersecting) { v.play().catch(() => {}); } else v.pause();
   }), { threshold: 0.15 });
   const watch = (v) => vio.observe(v);
+  // run fn once the element is near the viewport (used to defer video downloads)
+  const near = (node, fn) => {
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); fn(); } }, { rootMargin: '400px 0px' });
+    io.observe(node);
+  };
 
   // segmented controls with data-key -> callback(value)
   const seg = (card, key, fn) => $$(`.seg[data-key="${key}"] button`, card).forEach((b) => b.addEventListener('click', () => {
@@ -42,7 +47,7 @@
   ];
   const wall = $('#wall');
   if (wall) {
-    wall.innerHTML = WALL.map(([f, t, i]) => `<figure class="tile"><video muted playsinline loop preload="metadata" src="${V}wall/${f}.mp4#t=0.1"></video>
+    wall.innerHTML = WALL.map(([f, t, i]) => `<figure class="tile"><video muted playsinline loop preload="none" src="${V}wall/${f}.mp4"></video>
       <figcaption><b>${t}</b><span>“${i}”</span></figcaption></figure>`).join('');
     $$('video', wall).forEach(watch);
   }
@@ -61,13 +66,14 @@
     return {
       load(srcs, keepTime = true) {
         const t = keepTime ? lead.currentTime : 0;
-        const onScreen = lead.getBoundingClientRect().bottom > 0 && lead.getBoundingClientRect().top < innerHeight;
         videos.forEach((v, k) => {
           v.src = srcs[k];
           v.addEventListener('loadeddata', () => {
             v.currentTime = Math.min(t, v.duration - 0.05);
-            if (onScreen) v.play().catch(() => {});
+            const r = lead.getBoundingClientRect();
+            if (r.bottom > 0 && r.top < innerHeight) v.play().catch(() => {});
           }, { once: true });
+          v.load();
         });
       },
     };
@@ -91,7 +97,7 @@
     };
     seg(rc, 'task', (v) => { st.task = v; load(false); });
     seg(rc, 'render', (v) => { st.render = v; load(true); });
-    load(false);
+    near(rc, () => load(false));
   }
 
   // synthetic explorer
@@ -114,7 +120,7 @@
       diff(...SYN[i]).forEach((h, k) => { instr[k].innerHTML = `“${h}”`; });
     };
     seg(sc, 'ex', (v) => show(+v));
-    show(0);
+    near(sc, () => show(0));
   }
 
   // ---------------- OOD explorer ----------------
@@ -127,8 +133,8 @@
     const st = { task: 'rb', axis: 'view' };
     const base = $('#ood-base'), pert = $('#ood-pert'), sl = $('#ood-slider');
     const draw = () => {
-      base.src = `./static/images/ood/${st.task}_id.png`;
-      pert.src = `./static/images/ood/${st.task}_${st.axis}.png`;
+      base.src = `./static/images/ood/${st.task}_id.webp`;
+      pert.src = `./static/images/ood/${st.task}_${st.axis}.webp`;
       base.alt = `In distribution: ${OOD[st.task].id}`;
       pert.alt = `${st.axis} perturbation`;
       $('#ood-axis-label').textContent = st.axis[0].toUpperCase() + st.axis.slice(1);

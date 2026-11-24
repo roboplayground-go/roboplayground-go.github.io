@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" crossorigin>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -20,12 +21,12 @@
 <!-- ============================== CINEMATIC INTRO ============================== -->
 <section class="intro" id="intro" aria-label="Intro">
   <canvas id="intro-canvas" aria-hidden="true"></canvas>
-  <img class="intro-fallback" src="./static/images/teaser.png" alt="">
+  <img class="intro-fallback" src="./static/images/teaser.webp" alt="">
   <div class="letterbox top"></div><div class="letterbox bottom"></div>
   <div class="intro-caps" aria-hidden="true">
-    <p class="cap" data-at="0.9" data-until="3.4"><b>1,526</b> players around the world</p>
-    <p class="cap" data-at="3.7" data-until="6.1">played a robot game <b>in their browser</b></p>
-    <p class="cap" data-at="6.4" data-until="8.8">and every successful play <b>became a demo.</b></p>
+    <p class="cap" data-at="0.3" data-until="1.8"><b>1,526</b> players around the world</p>
+    <p class="cap" data-at="1.9" data-until="3.3">played a robot game <b>in their browser</b></p>
+    <p class="cap" data-at="3.4" data-until="4.8">and every successful play <b>became a demo.</b></p>
   </div>
   <div class="intro-title">
     <p class="intro-kicker">The TeleArms dataset</p>
@@ -78,7 +79,7 @@
     </div>
 
     <figure class="teaser reveal">
-      <img src="./static/images/teaser.png" alt="Players around the world play RoboPlayground GO! in the browser; every successful play becomes a demonstration in the TeleArms dataset, which trains robot policies that transfer to a real bimanual YAM robot." width="2040" height="1071">
+      <img src="./static/images/teaser.webp" alt="Players around the world play RoboPlayground GO! in the browser; every successful play becomes a demonstration in the TeleArms dataset, which trains robot policies that transfer to a real bimanual YAM robot." width="2040" height="1071">
       <figcaption class="center"><strong>Every successful play becomes a demo.</strong> Players control a simulated bimanual YAM robot from a browser with a keyboard. Their successful attempts are verified, re-rendered and collected into the TeleArms dataset, which we use to train robot policies and test them on the real robot.</figcaption>
     </figure>
 
@@ -124,7 +125,7 @@
     </div>
 
     <figure class="fig reveal">
-      <img src="./static/images/platform.png" alt="Four screens of the platform: discover missions, learn robot control, start beginner missions, and track progress on the leaderboard." width="1672" height="941">
+      <img loading="lazy" decoding="async" src="./static/images/platform.webp" alt="Four screens of the platform: discover missions, learn robot control, start beginner missions, and track progress on the leaderboard." width="1672" height="941">
       <figcaption class="center">From first visit to leaderboard: (a) discover missions, (b) learn robot control, (c) start beginner missions, (d) track progress.</figcaption>
     </figure>
 
@@ -160,13 +161,13 @@
       <p class="lede">After the public launch in early August, about <strong>250 people played on an average day</strong>. 51% of players return after their first day and 30% are still playing a month later. The top 10% of players contribute <strong>77% of all demonstrations</strong>.</p>
     </div>
     <figure class="fig reveal">
-      <img src="./static/images/engagement.png" alt="Four plots: daily players, cumulative players, retention after 1, 7 and 30 days, and the share of demos from the most active players." width="2070" height="621">
+      <img loading="lazy" decoding="async" src="./static/images/engagement.webp" alt="Four plots: daily players, cumulative players, retention after 1, 7 and 30 days, and the share of demos from the most active players." width="2070" height="621">
       <figcaption class="center">(a) Daily players. (b) Cumulative players. (c) Retention after 1, 7 and 30 days. (d) Share of demos from the most active players.</figcaption>
     </figure>
 
     <div class="grid-2" style="margin-top:24px; align-items:start">
       <figure class="fig reveal">
-        <img src="./static/images/elo_difficulty.png" alt="Bar charts of success rate and attempts per difficulty level, split by player Elo tercile." width="2070" height="732">
+        <img loading="lazy" decoding="async" src="./static/images/elo_difficulty.webp" alt="Bar charts of success rate and attempts per difficulty level, split by player Elo tercile." width="2070" height="732">
         <figcaption>Tasks are assigned one of 10 difficulty levels. Success falls with difficulty in every Elo group, while high-Elo players keep succeeding on the hardest levels.</figcaption>
       </figure>
       <div class="chart-card reveal">
@@ -209,9 +210,9 @@
         </div>
       </div>
       <div class="render-grid">
-        <div class="vbox main"><video muted playsinline loop preload="auto" data-cam="front"></video><span class="vlabel">top camera</span></div>
-        <div class="vbox"><video muted playsinline loop preload="auto" data-cam="left"></video><span class="vlabel">left wrist</span></div>
-        <div class="vbox"><video muted playsinline loop preload="auto" data-cam="right"></video><span class="vlabel">right wrist</span></div>
+        <div class="vbox main"><video muted playsinline loop preload="none" data-cam="front"></video><span class="vlabel">top camera</span></div>
+        <div class="vbox"><video muted playsinline loop preload="none" data-cam="left"></video><span class="vlabel">left wrist</span></div>
+        <div class="vbox"><video muted playsinline loop preload="none" data-cam="right"></video><span class="vlabel">right wrist</span></div>
       </div>
       <div class="render-ctl">
         <div class="seg seg-lg" data-key="render">
@@ -234,19 +235,19 @@
         </div>
       </div>
       <div class="grid-2 synth-grid">
-        <div><div class="vbox"><video muted playsinline loop preload="auto"></video><span class="vlabel">original human demo</span></div><p class="instr"></p></div>
-        <div><div class="vbox"><video muted playsinline loop preload="auto"></video><span class="vlabel accent">synthetic variant</span></div><p class="instr"></p></div>
+        <div><div class="vbox"><video muted playsinline loop preload="none"></video><span class="vlabel">original human demo</span></div><p class="instr"></p></div>
+        <div><div class="vbox"><video muted playsinline loop preload="none"></video><span class="vlabel accent">synthetic variant</span></div><p class="instr"></p></div>
       </div>
       <p class="chart-note">The robot actions stay identical. Only the cube colours, patch colours or letters are remapped, and the instruction is rewritten to match (changed words are highlighted). This adds 197,543 trajectories with no extra human play.</p>
     </div>
 
     <div class="grid-2" style="margin-top:24px">
       <figure class="fig reveal">
-        <img src="./static/images/growth.png" alt="Cumulative dataset demos over time, split into cloud and local play; local play dominates after September." width="960" height="576">
+        <img loading="lazy" decoding="async" src="./static/images/growth.webp" alt="Cumulative dataset demos over time, split into cloud and local play; local play dominates after September." width="960" height="576">
         <figcaption><strong>Latency matters.</strong> After local play launched in early September, collection sped up sharply while cloud play levelled off.</figcaption>
       </figure>
       <figure class="fig reveal">
-        <img src="./static/images/taxonomy.png" alt="Number of tasks per taxonomy category across manipulation, perception, reasoning and horizon." width="2070" height="645">
+        <img loading="lazy" decoding="async" src="./static/images/taxonomy.webp" alt="Number of tasks per taxonomy category across manipulation, perception, reasoning and horizon." width="2070" height="645">
         <figcaption>Each of the 69 tasks is labeled for manipulation, perception, reasoning and horizon. Bars show the number of tasks and the share of demos.</figcaption>
       </figure>
     </div>
@@ -312,11 +313,11 @@
     </div>
     <div class="grid-2" style="align-items:start">
       <figure class="fig reveal">
-        <img src="./static/images/diversity.png" alt="Trajectory plots for the most and least diverse tasks, and signature entropy for all 69 tasks." width="1719" height="945">
+        <img loading="lazy" decoding="async" src="./static/images/diversity.webp" alt="Trajectory plots for the most and least diverse tasks, and signature entropy for all 69 tasks." width="1719" height="945">
         <figcaption>Trajectory diversity per task. Green Patch Corner Guarding is the most diverse task and Cube Forward Right Placement the least.</figcaption>
       </figure>
       <figure class="fig reveal">
-        <img src="./static/images/first_cube.png" alt="Stacked bars showing which cube players moved first in the 15 two-cube tasks." width="990" height="627">
+        <img loading="lazy" decoding="async" src="./static/images/first_cube.webp" alt="Stacked bars showing which cube players moved first in the 15 two-cube tasks." width="990" height="627">
         <figcaption>Which cube players moved first in the 15 two-cube tasks. Behaviour converges only when the task has order constraints.</figcaption>
       </figure>
     </div>
@@ -385,7 +386,7 @@
         <p class="chart-note">Drag the slider to compare a training-distribution scene with its perturbed version. Each axis changes exactly one thing. Two more axes change no pixels: Lang paraphrases the instruction and Physics lowers cube friction to 0.3×.</p>
       </div>
       <figure class="fig reveal">
-        <img src="./static/images/full_model.png" alt="Per-task success rate of the full-dataset π0.5 model on all 69 tasks; mean 57.2%." width="1002" height="1221" style="max-height:640px; width:auto">
+        <img loading="lazy" decoding="async" src="./static/images/full_model.webp" alt="Per-task success rate of the full-dataset π0.5 model on all 69 tasks; mean 57.2%." width="1002" height="1221" style="max-height:640px; width:auto">
         <figcaption><strong>One model, 69 tasks.</strong> π<sub>0.5</sub> fine-tuned on the full dataset succeeds in 57.2% of episodes. 17 tasks always succeed. Most of the 15 that never do involve arranging letters, digits or words.</figcaption>
       </figure>
     </div>
@@ -419,7 +420,7 @@
     </div>
     <div class="grid-2" style="align-items:center">
       <figure class="fig reveal">
-        <img src="./static/images/gym.png" alt="Two renders of the TeleArms-Gym environment with the bimanual YAM robot on different tables." width="1774" height="887">
+        <img loading="lazy" decoding="async" src="./static/images/gym.webp" alt="Two renders of the TeleArms-Gym environment with the bimanual YAM robot on different tables." width="1774" height="887">
         <figcaption>TeleArms-Gym environment.</figcaption>
       </figure>
       <div class="reveal">
